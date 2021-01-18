@@ -35,6 +35,7 @@ const userSchema = mongoose.Schema({
 const user=this;
 //비밀번호 암호화 1.salt생성, 2.salt로 hash암호화
 userSchema.pre('save',(next)=>{
+  if(user.isModified('password')){
   bcrypt.genSalt(saltRounds,(err,salt)=>{
     if(err)return next(err);
     bcrypt.hash(user.password,salt,(err,hash)=>{
@@ -42,7 +43,9 @@ userSchema.pre('save',(next)=>{
       user.password=hash
     })
   })
-})
+}else{
+  next();
+}})
 
 const User=mongoose.model('User',userSchema);
 

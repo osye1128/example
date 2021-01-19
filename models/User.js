@@ -33,15 +33,16 @@ const userSchema = mongoose.Schema({
     type:Number
   }
 });
-const user=this;
+
 //비밀번호 암호화 1.salt생성, 2.salt로 hash암호화
-userSchema.pre('save',(next)=>{
+userSchema.pre('save',function (next){
+  const user=this;
   if(user.isModified('password')){
   bcrypt.genSalt(saltRounds,(err,salt)=>{
     if(err) return next(err);
     bcrypt.hash(user.password,salt,(err,hash)=>{
       if(err) return next(err);
-      user.password=hash;
+      user.password=hash; 
       next();
     })
   })
@@ -49,21 +50,31 @@ userSchema.pre('save',(next)=>{
   next();
 }})
 
-userSchema.methods.comparePassword=(painpassword,cb)=>{
-  bcrypt.compare(painpassword,user.password,(err,isMatch)=>{
+userSchema.methods.comparePassword=function(painpassword,cb){
+  bcrypt.compare(painpassword,this.password,(err,isMatch)=>{
     if(err) return cb(err);
      cb(null,isMatch);
   })
 };
 
-userSchema.methods.generateToken=(cb)=>{
-  const token=jwt.sign(user._id,'scretToken');
+userSchema.methods.generateToken=function(cb){
+  const user=this;
+  const token=jwt.sign(user._id.toHexString(),'scretToken');
   user.token=token;
-  user.save((err,user)=>{
+  user.save(function(err,user){
     if(err) return cb(err);
-    cb(null,user)
+    cb(null,user);
   })
+}
 
+userSchema.statics.findByToken=function(token, cb){
+  const user=this;
+  jwt.verify(token,'secretToken',(err,decoded)=>{
+    user.findOne({"_id":decoded,"token":token},function(err,user){
+      if(err) return err;
+      cb(null,user);
+    })
+  })
 }
 
 const User=mongoose.model('User',userSchema);

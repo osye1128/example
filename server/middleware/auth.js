@@ -1,4 +1,4 @@
-const {User} =require('../models/User');
+const {User} =require('../server/models/User');
 
 const auth = (req,res,next)=>{
   //클라이언트쿠키에서 토큰을 가져옴

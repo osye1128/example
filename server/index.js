@@ -7,7 +7,7 @@ const port=5000;
 const {User}=require('./models/User');
 const config=require('./config/dev');
 const nunjucks=require('nunjucks');
-const {auth}=require('./middleware/auth');
+const {auth}=require('../middleware/auth');
 
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(bodyParser.json());

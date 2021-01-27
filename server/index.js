@@ -6,18 +6,12 @@ const bodyParser=require('body-parser');
 const port=5000;
 const {User}=require('./models/User');
 const config=require('./config/dev');
-const nunjucks=require('nunjucks');
-const {auth}=require('../middleware/auth');
+
+const {auth}=require('./middleware/auth');
 
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.set('view engine', 'html');
-
-nunjucks.configure('views', {
-    express: app,
-    watch: true
-});
 
 
 mongoose.connect(config.mongoURI,{
@@ -25,6 +19,10 @@ mongoose.connect(config.mongoURI,{
 }).then(()=>console.log('mongodb connected..')).catch((err)=>console.log(err));
 
 app.get('/',(req,res)=>res.send('welcome!'));
+
+app.get('/api/hello',(req,res)=>{
+  res.send('안녕하세요.')
+})
 
 app.post('/api/users/register',(req,res)=>{
   const user = new User(req.body);

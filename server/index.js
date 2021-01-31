@@ -3,7 +3,7 @@ const mongoose=require('mongoose');
 const app=express();
 const cookieParser=require('cookie-parser');
 const bodyParser=require('body-parser');
-const port=5000;
+
 const {User}=require('./models/User');
 const config=require('./config/dev');
 
@@ -85,4 +85,6 @@ app.get('/api/users/logout',auth,(req,res)=>{
   })
 })
 
+
+const port=5000;
 app.listen(port,(req,res)=>console.log('welcome to 5000!!'))

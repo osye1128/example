@@ -33,9 +33,7 @@ app.post('/api/users/register',(req,res)=>{
   });
 });
 
-app.get('/login',(req,res)=>{
-  res.render('main')
-})
+
 
 app.post('/api/users/login',(req,res)=>{
   User.findOne({email:req.body.email},(err,user)=>{

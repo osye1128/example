@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import {useDispatch} from 'react-redux';
-import {loginUser} from '../../../_actions/User_action';
+import {registerUser} from '../../../_actions/User_action';
+
+
 
 
 
@@ -9,14 +11,22 @@ function RegisterPage(props) {
   const dispatch = useDispatch();
 
   const [Email, setEmail] = useState("");
-  const [Password, setPassword] = useState("")
+  const [Password, setPassword] = useState("");
+  const [Name, setName] = useState("");
+  const [confirmPassword, setconfirmPassword] = useState("");
   
   const onEmailHandler=(event)=>{
     setEmail(event.currentTarget.value)
   }
-
+  const onNameHandler=(event)=>{
+    setName(event.currentTarget.value)
+  }
   const onPasswordHandler=(event)=>{
     setPassword(event.currentTarget.value)
+  }
+
+  const onconfirmPasswordHandler=(event)=>{
+    setconfirmPassword(event.currentTarget.value)
   }
 
   const onSubmitHandler=(event)=>{
@@ -25,13 +35,18 @@ function RegisterPage(props) {
     let body={
       email:Email,
       password:Password,
+      name:Name,
+    }
+
+    if(Password !== confirmPassword){
+      alert('비밀번호를 다시 확인해주세요.')
     }
     
-    dispatch(loginUser(body)).then(response => {
-      if (response.payload.loginSuccess) {
-          props.history.push('/')
+    dispatch(registerUser(body)).then(response => {
+      if (response.payload.success) {
+          props.history.push('/login')
       } else {
-          alert('Error˝')
+          alert('Error')
       }
   })
     
@@ -43,14 +58,14 @@ function RegisterPage(props) {
       onSubmit={onSubmitHandler}>
         <label>Email</label>
         <input type="email" value={Email} onChange={onEmailHandler} />
+        <label>Name</label>
+        <input type="text" value={Name} onChange={onNameHandler} />
         <label>Password</label>
         <input type="password" value={Password} onChange={onPasswordHandler} />
         <label>confirmPassword</label>
-        <input type="password" value={Password} onChange={onPasswordHandler} />
-        <label>Name</label>
-        <input type="text" value={Name} onChange={onPasswordHandler} />
+        <input type="password" value={confirmPassword} onChange={onconfirmPasswordHandler} />
         <br />
-        <button>login</button>
+        <button>register</button>
       </form>
     </div>
   )
